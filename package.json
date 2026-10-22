@@ -1,0 +1,49 @@
+{
+  "name": "quetzalcoatl-1",
+  "version": "1.0.0",
+  "description": "Quetzalcōātl 1 — a polyphonic cybernetic synthesizer",
+  "author": "MENTLONE",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.mentlone.quetzalcoatl1",
+    "productName": "Quetzalcoatl 1",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "electron/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Quetzalcoatl-1-Setup-${version}-Windows-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Quetzalcoatl 1",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
