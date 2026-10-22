@@ -104,6 +104,44 @@ button.active,.primary{background:#d8b52f;border-color:#ffe16b;color:#10213b}
 .meter{background:#071629}.meter div{background:#7ce4c7}
 .footer{color:#23466a}
 #scope{background:#030b15!important;border-color:#3476a8!important}
+
+/* Mobile-first touch layout: keep the instrument usable in portrait orientation. */
+@media (max-width: 650px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { padding: 4px; font-size: 12px; }
+  .instrument { width: 100%; max-width: 100%; padding: 6px; border-width: 2px; }
+  header { gap: 8px; padding: 8px 6px; }
+  header h1 { font-size: clamp(16px, 5vw, 23px); letter-spacing: .05em; }
+  header .row { gap: 5px; }
+  .deck { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .deck > .panel, .fx-panel, .chart { grid-column: 1 / -1; min-width: 0; }
+  .panel { padding: 9px; }
+  .panel h2 { font-size: 11px; line-height: 1.45; overflow-wrap: anywhere; }
+  .panel h3 { font-size: 10px; line-height: 1.5; margin-top: 13px; }
+  .row { gap: 6px; }
+  .row > .control { flex: 1 1 135px; min-width: 0; }
+  .row > button { min-height: 38px; }
+  button { padding: 8px 9px; }
+  .control { min-width: 0; }
+  .control label, .knobwrap label { font-size: 10px; line-height: 1.4; overflow-wrap: anywhere; }
+  .control input[type=range] { min-height: 26px; }
+  .knobs, .fx-knobs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; }
+  .knob { width: 44px; height: 44px; }
+  .knob:after { left: 17px; }
+  .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+  .step { height: 38px; font-size: 11px; }
+  .displaygrid { gap: 4px; }
+  .display { padding: 5px 2px; }
+  .digits { font-size: clamp(17px, 5vw, 24px); }
+  .keyboard { height: 118px; }
+  .key { font-size: 8px; padding-bottom: 5px; }
+  .key.black { margin: 0 -3%; flex-basis: 6%; }
+  .tiny { font-size: 10px; line-height: 1.5; }
+  input, select { max-width: 100%; }
+  .fx-scenes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fx-scenes button { min-height: 40px; }
+  canvas { max-width: 100%; }
+}
 </style>
 
 </head>
