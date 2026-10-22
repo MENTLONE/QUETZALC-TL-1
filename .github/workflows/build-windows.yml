@@ -3,9 +3,8 @@ name: Build Windows installer
 on:
   push:
     branches: [desktop-soundwave]
-  workflow_dispatch:
-  push:
     tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: write
