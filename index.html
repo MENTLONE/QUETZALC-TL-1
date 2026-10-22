@@ -135,6 +135,45 @@ button.active,.primary{background:#d8b52f;border-color:#ffe16b;color:#10213b}
 <h3>OUTPUT / WAVEFORM MONITOR</h3><canvas id="scope" width="600" height="105" style="width:100%;height:105px;background:#10120f;border:1px solid #444a3e"></canvas><div class="row spread tiny muted"><span id="voiceStatus">0 / 8 VOICES</span><span id="scopeStatus">SCOPE STANDBY</span></div><div class="meter"><div id="meterBar"></div></div>
 <h3>10 FACTORY PRESETS</h3><div class="row"><div class="control"><label>PRESET SOUND</label><select id="presetSelect"></select></div><button id="loadPreset" class="primary">LOAD PRESET</button></div><h3>PATCH LIBRARY</h3><div class="row"><button id="initPatch">INIT PATCH</button><button id="exportPatches">EXPORT JSON</button><label class="tiny">IMPORT <input id="importFile" type="file" accept=".json,application/json" style="max-width:120px"></label></div><div class="tiny muted" style="margin-top:8px">64 memory slots · 11–88 address style · browser-local storage</div>
 </section></div>
+
+<section class="panel" style="margin-top:10px" id="serpentLab">
+<h2>05 / SIGNAL LAB · OSCILLOSCOPE + WAVE MUTATION + ACID ENGINE</h2>
+<div class="deck" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+ <div>
+  <h3>SWITCHABLE SCOPE VISUALS</h3>
+  <div class="control"><label>DISPLAY MODE</label><select id="scopeMode"><option value="wave">WAVEFORM · PHOSPHOR</option><option value="spectrum">SPECTRUM ANALYZER</option><option value="phase">STEREO / PHASE</option><option value="mountain">UNKNOWN PLEASURES · WAVE PLANE</option></select></div>
+  <div class="tiny muted" style="margin-top:8px">The rolling 3D-style ridge plane is an original audio-reactive homage to the iconic post-punk waveform landscape.</div>
+ </div>
+ <div>
+  <h3>WAVE MUTATION ENGINE</h3>
+  <div class="control"><label>OSCILLATOR SHAPE</label><select id="waveShape"><option value="sawtooth">SAWTOOTH</option><option value="square">SQUARE</option><option value="triangle">TRIANGLE</option><option value="sine">SINE</option><option value="pulse">PULSE / PWM</option><option value="custom">FOLD / CUSTOM</option></select></div>
+  <div class="control"><label class="row spread"><span>MUTATION</span><b id="mutationText">18%</b></label><input id="mutation" type="range" min="0" max="100" value="18"></div>
+  <div class="control"><label class="row spread"><span>OSC SYNC / RING MOD</span><b id="syncText">0%</b></label><input id="syncRing" type="range" min="0" max="100" value="0"></div>
+ </div>
+ <div>
+  <h3>VOICE ARCHITECTURE</h3>
+  <div class="row" id="voiceModes"><button class="active" data-voice="poly">POLY</button><button data-voice="unison">UNISON</button><button data-voice="bass">BASS</button><button data-voice="drone">DRONE</button></div>
+  <div class="tiny muted" id="voiceModeInfo" style="margin-top:8px">Polyphonic playing · full keyboard range.</div>
+  <div class="control" style="margin-top:10px"><label>UNISON WIDTH</label><input id="unisonWidth" type="range" min="0" max="100" value="28"></div>
+ </div>
+ <div>
+  <h3>TEMPORAL EFFECTS UNIT</h3>
+  <div class="control"><label class="row spread"><span>DELAY MIX</span><b id="delayText">18%</b></label><input id="delayMix" type="range" min="0" max="100" value="18"></div>
+  <div class="control"><label class="row spread"><span>REVERB MIX</span><b id="reverbText">14%</b></label><input id="reverbMix" type="range" min="0" max="100" value="14"></div>
+  <div class="control"><label class="row spread"><span>DRIVE / SATURATION</span><b id="driveText">12%</b></label><input id="drive" type="range" min="0" max="100" value="12"></div>
+  <div class="control"><label class="row spread"><span>WOW / FLUTTER</span><b id="wowText">5%</b></label><input id="wow" type="range" min="0" max="100" value="5"></div>
+ </div>
+ <div>
+  <h3>PROPER ACID SEQUENCER</h3>
+  <div class="control"><label>ROOT NOTE</label><select id="acidRoot"><option value="0">C</option><option value="1">C♯</option><option value="2">D</option><option value="3">D♯</option><option value="4">E</option><option value="5">F</option><option value="6">F♯</option><option value="7">G</option><option value="8">G♯</option><option value="9">A</option><option value="10">A♯</option><option value="11">B</option></select></div>
+  <div class="control"><label>SCALE</label><select id="acidScale"><option value="minor">NATURAL MINOR</option><option value="phrygian" selected>PHRYGIAN</option><option value="major">MAJOR</option><option value="pentatonic">MINOR PENTATONIC</option><option value="whole">WHOLE TONE</option></select></div>
+  <div class="row" style="margin-top:8px"><button id="acidGenerate" class="primary">GENERATE ACID</button><button id="acidEvolve">EVOLVE</button><button id="acidClear">CLEAR PATTERN</button></div>
+  <div class="control" style="margin-top:10px"><label class="row spread"><span>EVOLUTION / DENSITY</span><b id="evolveText">35%</b></label><input id="evolveAmount" type="range" min="0" max="100" value="35"></div>
+  <div class="tiny muted" style="margin-top:7px">Click step = cycle pitch/rest · Shift-click = accent · right-click = slide. Accent adds punch; slide ties into the next step.</div>
+ </div>
+</div>
+</section>
+
 <div class="panel" style="margin-top:10px"><h2>04 / PERFORMANCE KEYBOARD</h2><div class="row spread"><span class="tiny muted">CLICK / TOUCH KEYS OR USE COMPUTER KEYBOARD (A W S E D F T G Y H U J K)</span><span class="tiny muted">MIDI NOTE INPUT: OMNI · CHANNEL 1–16</span></div><div class="keyboard" id="keyboard"></div></div>
 <div class="footer"><span>QUETZALCŌĀTL 1 · BROWSER SYNTH ENGINE</span><span>WEB AUDIO · WEB MIDI · 8 VOICE / 4 DOUBLE MODE</span><span>PATCHES STAY IN THIS BROWSER UNTIL EXPORTED</span></div>
 </div>
@@ -219,6 +258,75 @@ function refreshMidi(){let ins=[...midiAccess.inputs.values()],outs=[...midiAcce
 function selectMidiInput(){if(selectedInput)selectedInput.onmidimessage=null;selectedInput=midiAccess&&[...midiAccess.inputs.values()].find(x=>x.id===$('midiIn').value)||null;if(selectedInput)selectedInput.onmidimessage=e=>{let [s,n,v]=e.data,cmd=s&0xf0;if(cmd===0x90&&v>0)noteOn(n,v,true);else if(cmd===0x80||(cmd===0x90&&v===0))noteOff(n,true);else if(cmd===0xE0){joy.x=((e.data[2]<<7|e.data[1])-8192)/8192}}}
 $('midiConnect').onclick=connectMidi;$('midiIn').onchange=selectMidiInput;$('midiOutSelect').onchange=()=>{selectedOutput=midiAccess&&[...midiAccess.outputs.values()].find(x=>x.id===$('midiOutSelect').value)||null};$('midiOut').onclick=()=>{if(!selectedOutput){$('midiStatus').textContent='Select a MIDI output first.';return}selectedOutput.send([0x90,60,100]);setTimeout(()=>selectedOutput.send([0x80,60,0]),250);$('midiStatus').textContent='Test note sent to '+selectedOutput.name};
 function drawScope(){const c=$('scope'),g=c.getContext('2d');const data=new Uint8Array(2048);function frame(){const w=c.width,h=c.height;g.clearRect(0,0,w,h);g.strokeStyle='#163552';g.lineWidth=1;for(let x=0;x<w;x+=30){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke()}for(let y=0;y<h;y+=21){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}g.strokeStyle='#ffd447';g.lineWidth=2;g.beginPath();if(audio&&audio.analyser&&audio.ctx.state==='running'){audio.analyser.getByteTimeDomainData(data);for(let x=0;x<w;x++){const i=Math.floor(x*data.length/w);const y=(data[i]/255)*h;if(x===0)g.moveTo(x,y);else g.lineTo(x,y)}}else{g.moveTo(0,h/2);g.lineTo(w,h/2)}g.stroke();requestAnimationFrame(frame)}frame()}
+
+/* Signal Lab extensions */
+let voiceArchitecture='poly', fxNodes=null, mutationAmount=.18, ringAmount=0, scopeMode='wave';
+function makeImpulse(ctx,seconds=2.2,decay=2.4){const rate=ctx.sampleRate,len=Math.floor(rate*seconds),buf=ctx.createBuffer(2,len,rate);for(let ch=0;ch<2;ch++){let d=buf.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay)}return buf}
+function setupExtendedFx(){
+ if(!audio||fxNodes)return;
+ const ctx=audio.ctx, input=audio.master;
+ // Post-master effect bus is connected in parallel with the clean output.
+ const delay=ctx.createDelay(1.5), feedback=ctx.createGain(), delayWet=ctx.createGain();
+ delay.delayTime.value=.28;feedback.gain.value=.24;delayWet.gain.value=.18;
+ delay.connect(feedback);feedback.connect(delay);delay.connect(delayWet);delayWet.connect(ctx.destination);
+ const convolver=ctx.createConvolver(),revWet=ctx.createGain();convolver.buffer=makeImpulse(ctx);revWet.gain.value=.14;convolver.connect(revWet);revWet.connect(ctx.destination);
+ const shaper=ctx.createWaveShaper();shaper.curve=new Float32Array(44100);for(let i=0;i<shaper.curve.length;i++){let x=i*2/shaper.curve.length-1;shaper.curve[i]=Math.tanh(x*2.4)}shaper.oversample='4x';
+ fxNodes={delay,feedback,delayWet,convolver,revWet,shaper};
+ // Parallel effects tap from the instrument's actual post-voice signal.
+ audio.filter.connect(delay);audio.filter.connect(convolver);
+}
+function updateSignalLab(){
+ const setText=(id,v)=>{if($(id))$(id).textContent=v+'%'};
+ mutationAmount=+$('mutation').value/100;ringAmount=+$('syncRing').value/100;
+ setText('mutationText',$('mutation').value);setText('syncText',$('syncRing').value);
+ setText('delayText',$('delayMix').value);setText('reverbText',$('reverbMix').value);setText('driveText',$('drive').value);setText('wowText',$('wow').value);setText('evolveText',$('evolveAmount').value);
+ if(audio){setupExtendedFx();if(fxNodes){fxNodes.delayWet.gain.setTargetAtTime(+$('delayMix').value/100*.5,audio.ctx.currentTime,.04);fxNodes.revWet.gain.setTargetAtTime(+$('reverbMix').value/100*.55,audio.ctx.currentTime,.04);fxNodes.feedback.gain.setTargetAtTime(.12+(+$('delayMix').value/100)*.55,audio.ctx.currentTime,.04);}}
+}
+['mutation','syncRing','delayMix','reverbMix','drive','wow','evolveAmount'].forEach(id=>$(id).addEventListener('input',updateSignalLab));
+$('scopeMode').onchange=()=>{scopeMode=$('scopeMode').value;$('scopeStatus').textContent=scopeMode.toUpperCase()+' DISPLAY'};
+$('waveShape').onchange=()=>{voices.forEach(v=>{let t=$('waveShape').value==='pulse'?'square':$('waveShape').value==='custom'?'sawtooth':$('waveShape').value;v.osc.type=t;v.osc2.type=t});};
+document.querySelectorAll('[data-voice]').forEach(b=>b.onclick=()=>{voiceArchitecture=b.dataset.voice;document.querySelectorAll('[data-voice]').forEach(x=>x.classList.toggle('active',x===b));$('voiceModeInfo').textContent=({poly:'Polyphonic playing · full keyboard range.',unison:'Unison mode · stacked detuned oscillators for a wider lead.',bass:'Bass mode · monophonic low register with reinforced sub.',drone:'Drone mode · long-release sustained tone architecture.'})[voiceArchitecture];if(voiceArchitecture==='bass'){$('seqOctave').value='36';$('subLevel').value=Math.max(65,+$('subLevel').value);$('subText').textContent=$('subLevel').value+'%';}});
+const acidScales={minor:[0,2,3,5,7,8,10],phrygian:[0,1,3,5,7,8,10],major:[0,2,4,5,7,9,11],pentatonic:[0,3,5,7,10],whole:[0,2,4,6,8,10]};
+function acidNotes(){return acidScales[$('acidScale').value]||acidScales.phrygian}
+function makeAcidNote(){let sc=acidNotes(),root=+$('acidRoot').value,oct=+$('seqOctave').value;return oct+root+sc[Math.floor(Math.random()*sc.length)]+(Math.random()<.28?12:0)}
+$('acidGenerate').onclick=()=>{let density=+$('evolveAmount').value/100;for(let i=0;i<16;i++){sequence[i]=Math.random()>(.12+density*.48)?makeAcidNote():null;seqAccent[i]=Math.random()<.23;seqSlide[i]=Math.random()<.2}seqIndex=0;renderSteps()};
+$('acidEvolve').onclick=()=>{let amount=+$('evolveAmount').value/100;for(let i=0;i<16;i++){if(Math.random()<amount*.6)sequence[i]=Math.random()<.2?null:makeAcidNote();if(Math.random()<amount*.35)seqAccent[i]=Math.random()<.5;if(Math.random()<amount*.3)seqSlide[i]=Math.random()<.5}renderSteps()};
+$('acidClear').onclick=()=>$('clearSeq').click();
+$('randomSeq').addEventListener('click',()=>{for(let i=0;i<16;i++)if(sequence[i]!==null){sequence[i]=makeAcidNote()}renderSteps()});
+const oldNoteOn=noteOn;
+noteOn=function(note,velocity=100,fromMidi=false){
+ if(voiceArchitecture==='bass')note=Math.min(note,55);
+ if(voiceArchitecture==='unison'&&audio){const before=voices.get(note);oldNoteOn(note,velocity,fromMidi);const v=voices.get(note);if(v){v.osc2.detune.value=-(+$('unisonWidth').value)*.12;v.osc.detune.value=(+$('unisonWidth').value)*.12}return}
+ if(voiceArchitecture==='drone'&&voices.has(note))return;
+ oldNoteOn(note,velocity,fromMidi);
+ const v=voices.get(note);if(v){const shape=$('waveShape').value;v.osc.type=shape==='pulse'?'square':shape==='custom'?'sawtooth':shape;v.osc2.type=shape==='pulse'?'square':shape==='custom'?'triangle':shape;
+ if(shape==='pulse'){v.osc2.detune.value=-180+mutationAmount*360}
+ if(ringAmount>0){const g=audio.ctx.createGain();g.gain.value=1;v.osc2.connect(g);g.gain.value=1-ringAmount*.7;v.ringGain=g}
+ if(mutationAmount>0){v.osc.detune.value=(Math.random()*2-1)*mutationAmount*38;v.osc2.detune.value+=(Math.random()*2-1)*mutationAmount*55}
+ if(voiceArchitecture==='drone')v.gain.gain.setTargetAtTime(.18,audio.ctx.currentTime,.2);
+ }
+};
+const oldNoteOff=noteOff;
+noteOff=function(note,fromMidi=false){if(voiceArchitecture==='drone')return;oldNoteOff(note,fromMidi)};
+const oldApplyLive=applyLive;
+applyLive=function(){oldApplyLive();if(audio){setupExtendedFx();updateSignalLab();if(fxNodes&&+$('drive').value>0){let amt=+$('drive').value/100;fxNodes.shaper.curve=new Float32Array(44100);for(let i=0;i<fxNodes.shaper.curve.length;i++){let x=i*2/fxNodes.shaper.curve.length-1;fxNodes.shaper.curve[i]=Math.tanh(x*(1+amt*12))} }}};
+drawScope=function(){const c=$('scope'),g=c.getContext('2d'),timeData=new Uint8Array(2048),freqData=new Uint8Array(1024);let history=[];function frame(){const w=c.width,h=c.height;g.fillStyle='#030b15';g.fillRect(0,0,w,h);const mode=$('scopeMode')?.value||'wave';
+ if(mode==='mountain'){
+  // Rolling, monochrome ridge plane inspired by vintage waveform data plots.
+  const rows=34,cols=180;let energy=0;
+  if(audio&&audio.analyser&&audio.ctx.state==='running'){audio.analyser.getByteTimeDomainData(timeData);for(let i=0;i<timeData.length;i++)energy+=Math.abs(timeData[i]-128);energy/=timeData.length}
+  history.unshift(energy);if(history.length>rows)history.pop();
+  g.strokeStyle='#d8e7ee';g.lineWidth=1;g.globalAlpha=.9;
+  for(let r=rows-1;r>=0;r--){g.beginPath();for(let x=0;x<cols;x++){let t=x/(cols-1),base=h*.15+r*(h*.72/rows),amp=(history[r]||0)*.52;let y=base-Math.sin(t*17+r*.19)*amp*(.25+Math.abs(Math.sin(t*6.1+r*.13))*.75);if(x===0)g.moveTo(t*w,y);else g.lineTo(t*w,y)}g.stroke()}g.globalAlpha=1;
+ }else{
+  g.strokeStyle='#163552';g.lineWidth=1;for(let x=0;x<w;x+=30){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke()}for(let y=0;y<h;y+=21){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}
+  if(audio&&audio.analyser&&audio.ctx.state==='running'){
+   if(mode==='spectrum'){audio.analyser.getByteFrequencyData(freqData);g.fillStyle='#42b9f4';for(let i=0;i<freqData.length;i+=3){let bh=freqData[i]/255*h;g.fillRect(i/3*(w/(freqData.length/3)),h-bh,Math.max(1,w/(freqData.length/3)-1),bh)}}
+   else {audio.analyser.getByteTimeDomainData(timeData);g.strokeStyle=mode==='phase'?'#7ce4c7':'#ffd447';g.lineWidth=2;g.beginPath();for(let x=0;x<w;x++){let i=Math.floor(x*timeData.length/w),y=timeData[i]/255*h;if(x===0)g.moveTo(x,y);else g.lineTo(x,y)}g.stroke();if(mode==='phase'){g.strokeStyle='#42b9f4';g.beginPath();for(let x=0;x<w;x++){let i=Math.floor(x*timeData.length/w),y=h/2+Math.sin(i*.045)*h*.22;if(x===0)g.moveTo(x,y);else g.lineTo(x,y)}g.stroke()}}
+  }else{g.strokeStyle='#ffd447';g.beginPath();g.moveTo(0,h/2);g.lineTo(w,h/2);g.stroke()}
+ }
+ requestAnimationFrame(frame)}frame()};
+
 try{let saved=localStorage.getItem('quetzalcoatl-patches');if(saved)patches=JSON.parse(saved)}catch(e){}selectPatch('11');renderParamList();selectParam('31');renderSteps();
 })();
 </script></body></html>
